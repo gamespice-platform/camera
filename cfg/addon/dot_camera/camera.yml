@@ -1,0 +1,4 @@
+# Shipped defaults are in DotCameraConfig; a key here overrides one.
+# fov: 75.0
+# position_half_life: 0.06
+# shake_scale: 1.0
