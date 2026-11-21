@@ -7,6 +7,7 @@ Shared camera rules: smoothing, field of view, orbit maths. Read the family [CLA
 | `core/dot_camera_config.gd` | `DotCameraConfig`: every tunable, `from_files()` |
 | `core/dot_camera_smoothing.gd` | `DotCameraSmoothing`: half-life damping, frame-rate independent |
 | `core/dot_camera_fov.gd` | `DotCameraFov`: speed widening, aim zoom, clamps, vertical/horizontal conversion |
+| `core/dot_camera_free_look.gd`, `core/dot_camera_zoom_2d.gd` | `DotCameraFreeLook` (roam yaw, pitch, speed) and `DotCameraZoom2D` (follow, size zoom, arena clamp), both pure |
 | `core/dot_camera_orbit.gd` | `DotCameraOrbit`: yaw, pitch, distance, shoulder, shake scaling |
 | `examples/camera_selftest.tscn` | the headless suite |
 

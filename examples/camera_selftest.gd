@@ -4,8 +4,8 @@ extends Node
 ## Counts sections run to their last line as well as checks, because a script error
 ## aborts a section and not the run.
 
-const EXPECTED_SECTIONS := 4
-const EXPECTED_CHECKS := 43
+const EXPECTED_SECTIONS := 6
+const EXPECTED_CHECKS := 65
 
 var _passed := 0
 var _failed := 0
@@ -18,6 +18,8 @@ func _ready() -> void:
 	_smoothing()
 	_fov()
 	_orbit()
+	_free_look()
+	_zoom_2d()
 	print("")
 	_check(_sections == EXPECTED_SECTIONS, "every section ran to its last line (%d of %d)" % [_sections, EXPECTED_SECTIONS])
 	_check(_passed + _failed == EXPECTED_CHECKS, "and the suite ran all %d of its checks (%d)" % [EXPECTED_CHECKS, _passed + _failed])
@@ -113,3 +115,59 @@ func _check(ok: bool, what: String, extra: String = "") -> void:
 	else:
 		_failed += 1
 		print("  FAIL  ", what, "  ", extra)
+
+
+func _free_look() -> void:
+	var c := DotCameraConfig.new()
+	var f := DotCameraFreeLook.new()
+	f.look(Vector2(0.0, 10.0))
+	_check(is_equal_approx(f.pitch, DotCameraFreeLook.MAX_PITCH), "pitch stops short of straight up")
+	f.look(Vector2(0.0, -20.0))
+	_check(is_equal_approx(f.pitch, -DotCameraFreeLook.MAX_PITCH), "and short of straight down")
+	f.look(Vector2(7.0, 0.0))
+	_check(absf(f.yaw) <= PI, "yaw wraps instead of growing without bound")
+	f = DotCameraFreeLook.new()
+	var t := f.step(c, Vector3(0, 0, 1), false, false, 1.0)
+	_check(t.origin.is_equal_approx(Vector3(0, 0, -c.free_speed)), "forward is along the view, which is -Z at rest")
+	f = DotCameraFreeLook.new()
+	f.step(c, Vector3(0, 1, 0), false, false, 1.0)
+	_check(is_equal_approx(f.position.y, c.free_speed), "up is world up")
+	f = DotCameraFreeLook.new()
+	f.step(c, Vector3(1, 0, 1), false, false, 1.0)
+	_check(is_equal_approx(f.position.length(), c.free_speed), "a diagonal is no faster than a straight line")
+	f = DotCameraFreeLook.new()
+	f.step(c, Vector3(1, 0, 0), true, false, 1.0)
+	var fast := f.position.length()
+	f = DotCameraFreeLook.new()
+	f.step(c, Vector3(1, 0, 0), false, true, 1.0)
+	_check(fast > f.position.length() * 10.0, "fast outruns slow")
+	f = DotCameraFreeLook.new()
+	f.seed_from(Transform3D(Basis.from_euler(Vector3(0.3, 1.0, 0.0), EULER_ORDER_YXZ), Vector3(1, 2, 3)))
+	_check(is_equal_approx(f.yaw, 1.0) and is_equal_approx(f.pitch, 0.3) and f.position == Vector3(1, 2, 3), "seed_from reads back an existing camera")
+	c.free_speed = 0.0
+	_check(not c.validate().ok, "a free speed of 0 is refused")
+	_sections += 1
+
+
+func _zoom_2d() -> void:
+	var c := DotCameraConfig.new()
+	_check(is_equal_approx(DotCameraZoom2D.zoom_for(c, c.zoom_2d_reference), 1.0), "the reference radius is zoom 1")
+	_check(DotCameraZoom2D.zoom_for(c, 4.0 * c.zoom_2d_reference) < 1.0, "a bigger target zooms out")
+	_check(DotCameraZoom2D.zoom_for(c, 1.0e9) == c.zoom_2d_min, "zoom floors at zoom_2d_min")
+	_check(DotCameraZoom2D.zoom_for(c, 0.01) == c.zoom_2d_max, "and caps at zoom_2d_max")
+	c.zoom_2d_max = 0.0
+	_check(DotCameraZoom2D.zoom_for(c, 0.01) > 2.0, "zoom_2d_max 0 is no cap")
+	c.zoom_2d_reference = 0.0
+	_check(DotCameraZoom2D.zoom_for(c, 50.0, 1.5) == 1.5, "a reference of 0 leaves the base zoom alone")
+	c = DotCameraConfig.new()
+	_check(DotCameraZoom2D.follow(c, Vector2.ZERO, Vector2(10, 0), 1.0).x > 9.9, "follow converges")
+	c.follow_2d_half_life = 0.0
+	_check(DotCameraZoom2D.follow(c, Vector2.ZERO, Vector2(10, 0), 0.016) == Vector2(10, 0), "a half life of 0 snaps")
+	var half := DotCameraZoom2D.half_extent(Vector2(800, 600), 2.0)
+	_check(half == Vector2(200, 150), "half extent is half the viewport over the zoom")
+	_check(DotCameraZoom2D.half_extent(Vector2(800, 600), 0.0).is_finite(), "a zero zoom does not divide by zero")
+	var bounds := Rect2(0, 0, 1000, 1000)
+	_check(DotCameraZoom2D.clamp_centre(Vector2(-50, 1200), half, bounds) == Vector2(200, 850), "the view stays inside the arena")
+	_check(DotCameraZoom2D.clamp_centre(Vector2(5, 5), Vector2(800, 800), bounds) == Vector2(500, 500), "a view wider than the arena is centred")
+	_check(DotCameraZoom2D.clamp_centre(Vector2(-50, 7), half, Rect2()) == Vector2(-50, 7), "empty bounds do not clamp")
+	_sections += 1

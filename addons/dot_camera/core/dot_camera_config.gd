@@ -48,6 +48,26 @@ const MODE_SPECTATOR := 3
 ## Sideways offset of the camera in metres, positive to the right (a shoulder).
 @export_range(-3.0, 3.0, 0.05) var shoulder: float = 0.0
 
+@export_group("Free look")
+## Metres per second of a roaming camera.
+@export_range(0.1, 200.0, 0.1) var free_speed: float = 8.0
+## Multiplier while the fast key is held.
+@export_range(1.0, 20.0, 0.1) var free_fast_scale: float = 3.0
+## Multiplier while the slow key is held; under 1 is slower.
+@export_range(0.01, 1.0, 0.01) var free_slow_scale: float = 0.25
+
+@export_group("Follow 2D")
+## Seconds for a 2D camera to cover half the distance to its target; 0 snaps.
+@export_range(0.0, 2.0, 0.01) var follow_2d_half_life: float = 0.08
+## Radius at which the 2D zoom is exactly 1; 0 turns size-based zoom off.
+@export_range(0.0, 1000.0, 1.0) var zoom_2d_reference: float = 32.0
+## Zoom falls as radius to this power; 0.5 keeps the share of the screen the target fills about constant.
+@export_range(0.0, 1.5, 0.05) var zoom_2d_exponent: float = 0.5
+## Lowest 2D zoom.
+@export_range(0.05, 8.0, 0.01) var zoom_2d_min: float = 0.18
+## Highest 2D zoom; 0 is no upper clamp.
+@export_range(0.0, 8.0, 0.01) var zoom_2d_max: float = 2.0
+
 @export_group("Shake")
 ## Scales the offsets GameSpice FX computes before they are applied; 0 turns shake off for comfort.
 @export_range(0.0, 2.0, 0.05) var shake_scale: float = 1.0
@@ -76,6 +96,12 @@ func validate() -> DotResult:
 		return DotResult.fail(DotError.CODE_INVALID, "camera pitch_min %.0f must be under pitch_max %.0f" % [pitch_min, pitch_max])
 	if shake_scale < 0.0:
 		return DotResult.fail(DotError.CODE_INVALID, "camera shake_scale cannot be negative (0 is off)")
+	if free_speed <= 0.0 or free_fast_scale <= 0.0 or free_slow_scale <= 0.0:
+		return DotResult.fail(DotError.CODE_INVALID, "camera free_speed and its fast and slow scales must be above 0")
+	if follow_2d_half_life < 0.0 or zoom_2d_reference < 0.0 or zoom_2d_exponent < 0.0:
+		return DotResult.fail(DotError.CODE_INVALID, "camera 2D half life, reference and exponent cannot be negative")
+	if zoom_2d_min <= 0.0 or (zoom_2d_max > 0.0 and zoom_2d_max < zoom_2d_min):
+		return DotResult.fail(DotError.CODE_INVALID, "camera zoom_2d_min must be above 0 and zoom_2d_max not under it (0 is no upper clamp)")
 	return DotResult.success(self)
 
 

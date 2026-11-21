@@ -2,3 +2,10 @@
 # fov: 75.0
 # position_half_life: 0.06
 # shake_scale: 1.0
+# free_speed: 8.0
+# free_fast_scale: 3.0
+# follow_2d_half_life: 0.08
+# zoom_2d_reference: 32.0
+# zoom_2d_exponent: 0.5
+# zoom_2d_min: 0.18
+# zoom_2d_max: 2.0   # 0 = no upper clamp

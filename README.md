@@ -25,6 +25,18 @@ func _process(delta: float) -> void:
     camera.position += DotCameraOrbit.shake_offset(cfg, fx_shake_offset)   # from GameSpice FX
 ```
 
+```gdscript
+# a roaming camera and a 2D follow, as pure values
+var free := DotCameraFreeLook.new()
+free.seed_from(camera.global_transform)
+free.look(mouse_relative * 0.002)
+camera.global_transform = free.step(cfg, Vector3(right, up, forward), fast, slow, delta)
+
+var zoom := DotCameraZoom2D.zoom_for(cfg, target_radius)
+pos = DotCameraZoom2D.follow(cfg, pos, target_pos, delta)
+pos = DotCameraZoom2D.clamp_centre(pos, DotCameraZoom2D.half_extent(viewport_size, zoom), arena)
+```
+
 ## Settings
 
 Every number is a field on `DotCameraConfig`. The values below are defaults, and the ranges are inspector slider limits, not enforced caps. Set the property from code or a config file to go beyond them.
@@ -47,6 +59,14 @@ Every number is a field on `DotCameraConfig`. The values below are defaults, and
 | `pitch_min` / `pitch_max` | -80 / 80 | Pitch limits in degrees. |
 | `shoulder` | 0.0 | Sideways offset in metres. |
 | `shake_scale` | 1.0 | Scales shake from GameSpice FX; 0 is off. |
+| `free_speed` | 8.0 | Metres per second of a roaming camera. |
+| `free_fast_scale` | 3.0 | Speed multiplier while the fast key is held. |
+| `free_slow_scale` | 0.25 | Speed multiplier while the slow key is held. |
+| `follow_2d_half_life` | 0.08 | Seconds for a 2D camera to cover half the way to its target; 0 snaps. |
+| `zoom_2d_reference` | 32.0 | Target radius at which 2D zoom is 1; 0 turns size-based zoom off. |
+| `zoom_2d_exponent` | 0.5 | Zoom falls as radius to this power. |
+| `zoom_2d_min` | 0.18 | Lowest 2D zoom. |
+| `zoom_2d_max` | 2.0 | Highest 2D zoom; 0 is no cap. |
 
 Layers, weakest first: the defaults, `cfg/addon/dot_camera/*.yml`, the game's files, the operator's files, `DOT_CAMERA_*` environment variables, then `--camera-*` flags.
 
