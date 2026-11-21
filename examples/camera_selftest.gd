@@ -1,6 +1,6 @@
 extends Node
 
-## dot-camera's headless suite (res://examples/camera_selftest.tscn).
+## gs-camera's headless suite (res://examples/camera_selftest.tscn).
 ## Counts sections run to their last line as well as checks, because a script error
 ## aborts a section and not the run.
 
@@ -13,7 +13,7 @@ var _sections := 0
 
 
 func _ready() -> void:
-	print("dot-camera")
+	print("gs-camera")
 	_config()
 	_smoothing()
 	_fov()

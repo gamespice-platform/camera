@@ -1,9 +1,9 @@
 class_name GSCameraConfig
 extends GSConfig
 
-## Every tunable of the camera rules. A game binds it with GSGameConfigBinder (kind `camera`) for cvars and the workbench; `cfg/addon/dot_camera/*.yml`, `DOT_CAMERA_*` and `--camera-*` layer over these defaults.
+## Every tunable of the camera rules. A game binds it with GSGameConfigBinder (kind `camera`) for cvars and the workbench; `cfg/addon/gs_camera/*.yml`, `GS_CAMERA_*` and `--camera-*` layer over these defaults.
 
-const ADDON := "dot-camera"
+const ADDON := "gs-camera"
 const MODE_FIRST := 0
 const MODE_THIRD := 1
 const MODE_ORBIT := 2
@@ -74,7 +74,7 @@ const MODE_SPECTATOR := 3
 
 
 func env_prefix() -> String:
-	return "DOT_CAMERA_"
+	return "GS_CAMERA_"
 
 
 func cli_prefix() -> String:
@@ -105,7 +105,7 @@ func validate() -> GSResult:
 	return GSResult.success(self)
 
 
-## Defaults, then `cfg/addon/dot_camera/*.yml` and the game tier, then environment and command line.
+## Defaults, then `cfg/addon/gs_camera/*.yml` and the game tier, then environment and command line.
 static func from_files() -> GSResult:
 	var cfg := GSCameraConfig.new()
 	var files := GSAddonConfig.load_dir(ADDON)

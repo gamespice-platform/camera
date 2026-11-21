@@ -6,8 +6,8 @@ This first slice is the rules every rig shares, as pure functions and small stat
 
 ## Install
 
-1. Copy `addons/dot_camera/` and `addons/dot_core/` into your project.
-2. Enable dot-camera in *Project > Project Settings > Plugins*.
+1. Copy `addons/gs_camera/` and `addons/gs_core/` into your project.
+2. Enable gs-camera in *Project > Project Settings > Plugins*.
 
 ## Quick start
 
@@ -68,7 +68,7 @@ Every number is a field on `GSCameraConfig`. The values below are defaults, and 
 | `zoom_2d_min` | 0.18 | Lowest 2D zoom. |
 | `zoom_2d_max` | 2.0 | Highest 2D zoom; 0 is no cap. |
 
-Layers, weakest first: the defaults, `cfg/addon/dot_camera/*.yml`, the game's files, the operator's files, `DOT_CAMERA_*` environment variables, then `--camera-*` flags.
+Layers, weakest first: the defaults, `cfg/addon/gs_camera/*.yml`, the game's files, the operator's files, `GS_CAMERA_*` environment variables, then `--camera-*` flags.
 
 ## What it is not
 
