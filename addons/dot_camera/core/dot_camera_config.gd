@@ -1,7 +1,7 @@
-class_name DotCameraConfig
-extends DotConfig
+class_name GSCameraConfig
+extends GSConfig
 
-## Every tunable of the camera rules. A game binds it with DotGameConfigBinder (kind `camera`) for cvars and the workbench; `cfg/addon/dot_camera/*.yml`, `DOT_CAMERA_*` and `--camera-*` layer over these defaults.
+## Every tunable of the camera rules. A game binds it with GSGameConfigBinder (kind `camera`) for cvars and the workbench; `cfg/addon/dot_camera/*.yml`, `DOT_CAMERA_*` and `--camera-*` layer over these defaults.
 
 const ADDON := "dot-camera"
 const MODE_FIRST := 0
@@ -81,34 +81,34 @@ func cli_prefix() -> String:
 	return "--camera-"
 
 
-func validate() -> DotResult:
+func validate() -> GSResult:
 	if mode < MODE_FIRST or mode > MODE_SPECTATOR:
-		return DotResult.fail(DotError.CODE_INVALID, "camera mode %d is not 0 to 3" % mode)
+		return GSResult.fail(GSError.CODE_INVALID, "camera mode %d is not 0 to 3" % mode)
 	if fov <= 0.0 or fov >= 180.0:
-		return DotResult.fail(DotError.CODE_INVALID, "camera fov %.1f must be between 0 and 180" % fov)
+		return GSResult.fail(GSError.CODE_INVALID, "camera fov %.1f must be between 0 and 180" % fov)
 	if fov_max > 0.0 and fov_max < fov_min:
-		return DotResult.fail(DotError.CODE_INVALID, "camera fov_max %.1f is under fov_min %.1f (0 is no upper clamp)" % [fov_max, fov_min])
+		return GSResult.fail(GSError.CODE_INVALID, "camera fov_max %.1f is under fov_min %.1f (0 is no upper clamp)" % [fov_max, fov_min])
 	if position_half_life < 0.0 or rotation_half_life < 0.0:
-		return DotResult.fail(DotError.CODE_INVALID, "camera half lives cannot be negative (0 follows exactly)")
+		return GSResult.fail(GSError.CODE_INVALID, "camera half lives cannot be negative (0 follows exactly)")
 	if distance_max > 0.0 and distance_max < distance_min:
-		return DotResult.fail(DotError.CODE_INVALID, "camera distance_max %.1f is under distance_min %.1f (0 is no limit)" % [distance_max, distance_min])
+		return GSResult.fail(GSError.CODE_INVALID, "camera distance_max %.1f is under distance_min %.1f (0 is no limit)" % [distance_max, distance_min])
 	if pitch_min >= pitch_max:
-		return DotResult.fail(DotError.CODE_INVALID, "camera pitch_min %.0f must be under pitch_max %.0f" % [pitch_min, pitch_max])
+		return GSResult.fail(GSError.CODE_INVALID, "camera pitch_min %.0f must be under pitch_max %.0f" % [pitch_min, pitch_max])
 	if shake_scale < 0.0:
-		return DotResult.fail(DotError.CODE_INVALID, "camera shake_scale cannot be negative (0 is off)")
+		return GSResult.fail(GSError.CODE_INVALID, "camera shake_scale cannot be negative (0 is off)")
 	if free_speed <= 0.0 or free_fast_scale <= 0.0 or free_slow_scale <= 0.0:
-		return DotResult.fail(DotError.CODE_INVALID, "camera free_speed and its fast and slow scales must be above 0")
+		return GSResult.fail(GSError.CODE_INVALID, "camera free_speed and its fast and slow scales must be above 0")
 	if follow_2d_half_life < 0.0 or zoom_2d_reference < 0.0 or zoom_2d_exponent < 0.0:
-		return DotResult.fail(DotError.CODE_INVALID, "camera 2D half life, reference and exponent cannot be negative")
+		return GSResult.fail(GSError.CODE_INVALID, "camera 2D half life, reference and exponent cannot be negative")
 	if zoom_2d_min <= 0.0 or (zoom_2d_max > 0.0 and zoom_2d_max < zoom_2d_min):
-		return DotResult.fail(DotError.CODE_INVALID, "camera zoom_2d_min must be above 0 and zoom_2d_max not under it (0 is no upper clamp)")
-	return DotResult.success(self)
+		return GSResult.fail(GSError.CODE_INVALID, "camera zoom_2d_min must be above 0 and zoom_2d_max not under it (0 is no upper clamp)")
+	return GSResult.success(self)
 
 
 ## Defaults, then `cfg/addon/dot_camera/*.yml` and the game tier, then environment and command line.
-static func from_files() -> DotResult:
-	var cfg := DotCameraConfig.new()
-	var files := DotAddonConfig.load_dir(ADDON)
+static func from_files() -> GSResult:
+	var cfg := GSCameraConfig.new()
+	var files := GSAddonConfig.load_dir(ADDON)
 	if not files.ok:
 		return files
 	cfg.apply_dictionary(files.value as Dictionary, "yml")

@@ -1,4 +1,4 @@
-class_name DotCameraZoom2D
+class_name GSCameraZoom2D
 extends RefCounted
 
 ## The three things a 2D follow camera must do and that interact: follow a target, zoom with its size, and stay inside the arena. Pure functions over values, so one implementation serves a Camera2D rig and a headless suite.
@@ -7,7 +7,7 @@ extends RefCounted
 
 
 ## The zoom for a target of [param radius]: falls as radius to `zoom_2d_exponent`, clamped. A radius of 0 or a reference of 0 returns [param base_zoom].
-static func zoom_for(cfg: DotCameraConfig, radius: float, base_zoom: float = 1.0) -> float:
+static func zoom_for(cfg: GSCameraConfig, radius: float, base_zoom: float = 1.0) -> float:
 	if cfg.zoom_2d_reference <= 0.0 or radius <= 0.0:
 		return base_zoom
 	var z := base_zoom * pow(cfg.zoom_2d_reference / maxf(0.001, radius), cfg.zoom_2d_exponent)
@@ -18,8 +18,8 @@ static func zoom_for(cfg: DotCameraConfig, radius: float, base_zoom: float = 1.0
 
 
 ## Where a camera at [param current] ends up after [param delta] seconds chasing [param target].
-static func follow(cfg: DotCameraConfig, current: Vector2, target: Vector2, delta: float) -> Vector2:
-	return DotCameraSmoothing.damp_vec2(current, target, cfg.follow_2d_half_life, delta)
+static func follow(cfg: GSCameraConfig, current: Vector2, target: Vector2, delta: float) -> Vector2:
+	return GSCameraSmoothing.damp_vec2(current, target, cfg.follow_2d_half_life, delta)
 
 
 ## Half the world area a view of [param viewport] pixels shows at [param zoom]. A zero zoom is clamped: the division otherwise gives an infinite rectangle.

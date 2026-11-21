@@ -2,11 +2,11 @@
 
 Everything here is pure: values in, values out, no nodes and no clock, so a game's own camera node applies the result.
 
-- `DotCameraSmoothing`: frame-rate independent damping (a half life of 0 follows exactly).
-- `DotCameraFov`: speed and aim field-of-view rules.
-- `DotCameraOrbit`: yaw, pitch, distance, shoulder and shake scaling for third-person and orbit rigs.
-- `DotCameraFreeLook`: a roaming camera for spectators, flythroughs and debug views. Pitch is held short of straight up, forward follows the view, up is world up, a diagonal is no faster.
-- `DotCameraZoom2D`: follow, size-based zoom and arena clamp for a 2D camera. A view wider than the arena is centred.
+- `GSCameraSmoothing`: frame-rate independent damping (a half life of 0 follows exactly).
+- `GSCameraFov`: speed and aim field-of-view rules.
+- `GSCameraOrbit`: yaw, pitch, distance, shoulder and shake scaling for third-person and orbit rigs.
+- `GSCameraFreeLook`: a roaming camera for spectators, flythroughs and debug views. Pitch is held short of straight up, forward follows the view, up is world up, a diagonal is no faster.
+- `GSCameraZoom2D`: follow, size-based zoom and arena clamp for a 2D camera. A view wider than the arena is centred.
 
 ## Where this came from
 

@@ -1,11 +1,11 @@
-class_name DotCameraFov
+class_name GSCameraFov
 extends RefCounted
 
 ## The field-of-view rules as pure functions: widen with speed, narrow while aiming, clamp, and convert between the vertical and horizontal angle.
 
 
 ## The vertical field of view for a body moving at [param speed] metres per second. [param aiming] narrows it by `fov_aim_scale`.
-static func target(cfg: DotCameraConfig, speed: float, aiming: bool = false) -> float:
+static func target(cfg: GSCameraConfig, speed: float, aiming: bool = false) -> float:
 	if not cfg.enabled:
 		return cfg.fov
 	var widen := 0.0
@@ -17,7 +17,7 @@ static func target(cfg: DotCameraConfig, speed: float, aiming: bool = false) -> 
 	return clamp_fov(cfg, value)
 
 
-static func clamp_fov(cfg: DotCameraConfig, value: float) -> float:
+static func clamp_fov(cfg: GSCameraConfig, value: float) -> float:
 	var out := maxf(value, cfg.fov_min)
 	if cfg.fov_max > 0.0:
 		out = minf(out, cfg.fov_max)

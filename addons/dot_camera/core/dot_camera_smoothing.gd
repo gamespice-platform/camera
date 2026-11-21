@@ -1,4 +1,4 @@
-class_name DotCameraSmoothing
+class_name GSCameraSmoothing
 extends RefCounted
 
 ## Frame-rate independent smoothing as pure functions: the same half life gives the same motion at 30 and at 240 frames per second. A half life of 0 follows exactly, never divides by it.

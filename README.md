@@ -2,7 +2,7 @@
 
 Godot 4.7+ addon for cameras: first person, third person, orbit and spectator rigs, a collision-aware spring arm, smoothing, field-of-view rules and shake applied from values GameSpice FX computes. Part of the [GameSpice](https://github.com/gamespice-platform) family. It needs only [GameSpice Core](https://github.com/gamespice-platform/core).
 
-This first slice is the rules every rig shares, as pure functions and small state objects: frame-rate independent smoothing, field-of-view rules (speed widening, aim zoom, clamps, vertical and horizontal conversion) and the maths of an orbit camera. The collision-aware spring arm is GameSpice Core's `DotCameraBoom`, and this addon builds on it rather than copying it.
+This first slice is the rules every rig shares, as pure functions and small state objects: frame-rate independent smoothing, field-of-view rules (speed widening, aim zoom, clamps, vertical and horizontal conversion) and the maths of an orbit camera. The collision-aware spring arm is GameSpice Core's `GSCameraBoom`, and this addon builds on it rather than copying it.
 
 ## Install
 
@@ -12,34 +12,34 @@ This first slice is the rules every rig shares, as pure functions and small stat
 ## Quick start
 
 ```gdscript
-var cfg: DotCameraConfig = DotCameraConfig.from_files().value
-var orbit := DotCameraOrbit.from_config(cfg)
+var cfg: GSCameraConfig = GSCameraConfig.from_files().value
+var orbit := GSCameraOrbit.from_config(cfg)
 
 func _process(delta: float) -> void:
     orbit.look(cfg, -mouse_delta.x * 0.003, -mouse_delta.y * 0.003)
     var wanted := orbit.transform_at(cfg, player.global_position + Vector3(0, 1.6, 0))
-    camera.global_position = DotCameraSmoothing.damp_vec3(
+    camera.global_position = GSCameraSmoothing.damp_vec3(
         camera.global_position, wanted.origin, cfg.position_half_life, delta)
     camera.global_basis = wanted.basis
-    camera.fov = DotCameraSmoothing.damp(camera.fov, DotCameraFov.target(cfg, player.velocity.length(), aiming), 0.08, delta)
-    camera.position += DotCameraOrbit.shake_offset(cfg, fx_shake_offset)   # from GameSpice FX
+    camera.fov = GSCameraSmoothing.damp(camera.fov, GSCameraFov.target(cfg, player.velocity.length(), aiming), 0.08, delta)
+    camera.position += GSCameraOrbit.shake_offset(cfg, fx_shake_offset)   # from GameSpice FX
 ```
 
 ```gdscript
 # a roaming camera and a 2D follow, as pure values
-var free := DotCameraFreeLook.new()
+var free := GSCameraFreeLook.new()
 free.seed_from(camera.global_transform)
 free.look(mouse_relative * 0.002)
 camera.global_transform = free.step(cfg, Vector3(right, up, forward), fast, slow, delta)
 
-var zoom := DotCameraZoom2D.zoom_for(cfg, target_radius)
-pos = DotCameraZoom2D.follow(cfg, pos, target_pos, delta)
-pos = DotCameraZoom2D.clamp_centre(pos, DotCameraZoom2D.half_extent(viewport_size, zoom), arena)
+var zoom := GSCameraZoom2D.zoom_for(cfg, target_radius)
+pos = GSCameraZoom2D.follow(cfg, pos, target_pos, delta)
+pos = GSCameraZoom2D.clamp_centre(pos, GSCameraZoom2D.half_extent(viewport_size, zoom), arena)
 ```
 
 ## Settings
 
-Every number is a field on `DotCameraConfig`. The values below are defaults, and the ranges are inspector slider limits, not enforced caps. Set the property from code or a config file to go beyond them.
+Every number is a field on `GSCameraConfig`. The values below are defaults, and the ranges are inspector slider limits, not enforced caps. Set the property from code or a config file to go beyond them.
 
 | Setting | Default | What it does |
 | --- | --- | --- |
@@ -72,7 +72,7 @@ Layers, weakest first: the defaults, `cfg/addon/dot_camera/*.yml`, the game's fi
 
 ## What it is not
 
-- Not the spring arm: GameSpice Core ships `DotCameraBoom`, `DotCameraProbe`, `DotCameraFade` and `DotCameraCheck`. Use them; this addon adds the rules around them.
+- Not the spring arm: GameSpice Core ships `GSCameraBoom`, `GSCameraProbe`, `GSCameraFade` and `GSCameraCheck`. Use them; this addon adds the rules around them.
 - Not look input: GameSpice Player Controller accumulates look and owns its first and third person rigs. They can use these rules.
 - Not shake: GameSpice FX computes the offsets and never touches a camera; this addon only scales and applies what it computes.
 - Not spectating: GameSpice Spectate owns observer modes, target choice and who may watch whom. `mode` 3 here only selects the rules.

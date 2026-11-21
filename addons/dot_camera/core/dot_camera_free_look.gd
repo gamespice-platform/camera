@@ -1,4 +1,4 @@
-class_name DotCameraFreeLook
+class_name GSCameraFreeLook
 extends RefCounted
 
 ## The controls of a roaming camera: yaw, pitch and a position, moved by a game's own input. Shared by a spectator's roam, a map flythrough and a debug camera.
@@ -6,7 +6,7 @@ extends RefCounted
 ## It reads no input and touches no camera: the game feeds it numbers, so every game's own input sampler works. What is shared is the arithmetic that is easy to get wrong: pitch clamped short of straight up so the basis never degenerates, movement along the way the camera faces so forward climbs when looking up, and speed scaling.
 ##
 ## [codeblock]
-## var free := DotCameraFreeLook.new()
+## var free := GSCameraFreeLook.new()
 ## free.seed_from(camera.global_transform)
 ## free.look(mouse_relative * sensitivity)
 ## camera.global_transform = free.step(cfg, Vector3(right, up, forward), fast, slow, delta)
@@ -44,7 +44,7 @@ func get_transform() -> Transform3D:
 
 
 ## Flies for [param delta] seconds. [param move] is x right, y up (world up, so looking down and pressing up does not dive), z forward along the view, each in -1..1.
-func step(cfg: DotCameraConfig, move: Vector3, fast: bool, slow: bool, delta: float) -> Transform3D:
+func step(cfg: GSCameraConfig, move: Vector3, fast: bool, slow: bool, delta: float) -> Transform3D:
 	var speed := cfg.free_speed
 	if fast:
 		speed *= cfg.free_fast_scale
