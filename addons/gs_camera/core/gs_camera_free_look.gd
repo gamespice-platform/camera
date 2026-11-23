@@ -1,16 +1,8 @@
 class_name GSCameraFreeLook
 extends RefCounted
 
-## The controls of a roaming camera: yaw, pitch and a position, moved by a game's own input. Shared by a spectator's roam, a map flythrough and a debug camera.
-##
-## It reads no input and touches no camera: the game feeds it numbers, so every game's own input sampler works. What is shared is the arithmetic that is easy to get wrong: pitch clamped short of straight up so the basis never degenerates, movement along the way the camera faces so forward climbs when looking up, and speed scaling.
-##
-## [codeblock]
-## var free := GSCameraFreeLook.new()
-## free.seed_from(camera.global_transform)
-## free.look(mouse_relative * sensitivity)
-## camera.global_transform = free.step(cfg, Vector3(right, up, forward), fast, slow, delta)
-## [/codeblock]
+## The controls of a roaming camera: yaw, pitch and a position, moved by a game's own input (spectator roam, flythrough, debug camera).
+## It reads no input and touches no camera: the game feeds it numbers via `seed_from()`, `look()` and `step()`. What is shared is the arithmetic that is easy to get wrong: pitch clamped short of straight up, movement along the way the camera faces, and speed scaling.
 
 ## Short of 90 degrees: at straight up the forward and up vectors are parallel and the basis is garbage.
 const MAX_PITCH := deg_to_rad(89.0)
