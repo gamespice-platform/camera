@@ -2,6 +2,8 @@
 
 Godot 4.7+ addon for cameras: first person, third person, orbit and spectator rigs, a collision-aware spring arm, smoothing, field-of-view rules and shake applied from values GameSpice FX computes. Part of the [GameSpice](https://github.com/gamespice-platform) family. It needs only [GameSpice Core](https://github.com/gamespice-platform/core).
 
+This GameSpice addon is MIT licensed and built with Claude Code. It has a headless self-test, `res://examples/camera_selftest.tscn`. The games in [Zee's Games](https://zeesgames.com) are built on the GameSpice addons and run on live servers, so the camera rules are used in real play.
+
 This first slice is the rules every rig shares, as pure functions and small state objects: frame-rate independent smoothing, field-of-view rules (speed widening, aim zoom, clamps, vertical and horizontal conversion) and the maths of an orbit camera. The collision-aware spring arm is GameSpice Core's `GSCameraBoom`, and this addon builds on it rather than copying it.
 
 ## Install
@@ -77,6 +79,36 @@ Layers, weakest first: the defaults, `cfg/addon/gs_camera/*.yml`, the game's fil
 - Not shake: GameSpice FX computes the offsets and never touches a camera; this addon only scales and applies what it computes.
 - Not spectating: GameSpice Spectate owns observer modes, target choice and who may watch whom. `mode` 3 here only selects the rules.
 - Not seats: GameSpice Vehicle owns seats and the cameras bound to them.
+
+## Test
+
+```bash
+godot --headless --path . --import
+godot --headless --path . res://examples/camera_selftest.tscn
+```
+
+The self-test is offline and exits non-zero on any failure.
+
+## Used by
+
+Every game in the collection vendors it:
+
+- [Fatal Contact](https://zeesgames.com/fatal-contact)
+- [Airdrift](https://zeesgames.com/airdrift)
+- [Playlot](https://zeesgames.com/playlot)
+- [Hungario](https://zeesgames.com/hungario)
+- [Buses From Hell](https://zeesgames.com/buses-from-hell)
+- [Smash Copter](https://zeesgames.com/smash-copter)
+- [Zombie Zone](https://zeesgames.com/zombie-zone)
+- [Hide n Seek](https://zeesgames.com/hide-n-seek)
+- [Prop Hunt](https://zeesgames.com/prop-hunt)
+- [Murder Mystery](https://zeesgames.com/murder-mystery)
+- [Deathrun](https://zeesgames.com/deathrun)
+- [Wipeout](https://zeesgames.com/wipeout)
+- [Dangerous Delivery](https://zeesgames.com/dangerous-delivery)
+- [Look At Me](https://zeesgames.com/look-at-me)
+
+The whole collection is at [zeesgames.com](https://zeesgames.com).
 
 ## Licence
 
